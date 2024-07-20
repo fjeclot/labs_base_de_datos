@@ -123,7 +123,7 @@ INSERT INTO Animales (id_animal, nombre, especie, edad, propietario_nombre, prop
 (9, 'Bella', 'Perro', 3, 'Pablo Hernández', 'Calle Oeste 678', 'Dra. Gómez', 'Avenida Central 789'),
 (10, 'Oreo', 'Gato', 2, 'Lucía Rodríguez', 'Calle Libertad 890', 'Dr. Martínez', 'Avenida Sur 456');
 
-use lab1;
+-- ejercicio 1
 
 CREATE TABLE Directores (
     id_director INT PRIMARY KEY,
@@ -153,28 +153,64 @@ create table Peliculas_Actores (
 	foreign key (id_actor) references Actores(id_actor)
 );
 
+alter table Peliculas 
+add column id_director INT;
+
+alter table Peliculas 
+add column id_genero INT;
+
+alter table Peliculas 
+add column id_pais INT;
+
+alter table Peliculas
+add constraint fk_director
+foreign key (id_director) references Directores(id_director);
+
+alter table Peliculas
+add constraint fk_genero
+foreign key (id_genero) references Generos(id_genero);
+
+alter table Peliculas
+add constraint fk_pais
+foreign key (id_pais) references Paises(id_pais);
+
+
 -- ejercicio 2
 --  Al igual que en el ejercicio 1, la primera norma de normalización se cumple
 -- puesto que cada columna tiene valores únicos y atómicos.
--- Buscamos dividir las tablas para evitar redundancias, dependencias transitivas.
+-- Buscamos dividir las tablas para evitar redundancias, dependencias transitivas añadiendo foreign key
+
+use lab1;
 
 create table Propietarios (
 	id_propietario INT primary key,
-	nombre VARCHAR(50),
+	nombre VARCHAR(50) not null,
 	direccion VARCHAR(255),
 	telefono VARCHAR (20)
 );
 
 create table Talleres (
 	id_taller INT primary key,
-	nombre VARCHAR(50),
+	nombre VARCHAR(50) not null,
 	direccion VARCHAR(255)
 );
+
+alter table Coches
+add column id_propietario INT,
+add column id_taller INT;
+
+alter table Coches
+add constraint fk_propietario
+foreign key (id_propietario) references Propietarios(id_propietario);
+
+alter table Coches
+add constraint fk_taller
+foreign key (id_taller) references Talleres(id_taller);
 
 -- ejercicio 3
 
 create table Jugadores (
-	id_jugador INT primary key auto_increment,
+	id_jugador INT primary key,
 	nombre_jugador VARCHAR(255)
 );
 
@@ -189,12 +225,12 @@ create table Equipos_Jugadores (
 -- ejercicio 4
 
 create table Artistas (
-	id_artista INT primary key auto_increment,
+	id_artista INT primary key,
 	nombre_artista VARCHAR(255) unique
 );
 
 create table Albums (
-	id_album INT primary key auto_increment,
+	id_album INT primary key,
 	nombre_album VARCHAR(255),
 	año_lanzamiento INT,
 	id_artista INT,
@@ -202,14 +238,32 @@ create table Albums (
 );
 
 create table GenerosCanciones (
-	id_genero INT primary key auto_increment,
+	id_genero INT primary key,
 	nombre_genero VARCHAR(255) unique
 );
 
 create table Compositores (
-	id_compositor INT primary key auto_increment,
+	id_compositor INT primary key,
 	nombre_compositor VARCHAR(255) unique
 );
+
+alter table Canciones 
+add column id_album INT,
+add column id_genero INT,
+add column id_compositor INT;
+
+alter table Canciones 
+add constraint fk_album
+foreign key (id_album) references Albums(id_album);
+
+alter table Canciones 
+add constraint fk_generoCanciones
+foreign key (id_genero) references GenerosCanciones(id_genero);
+
+alter table Canciones 
+add constraint fk_compositor
+foreign key (id_compositor) references Compositores(id_compositor);
+
 
 -- ejercicio 5
 
@@ -225,6 +279,18 @@ create table Veterinarios (
 	direccion_veterinario VARCHAR(255)
 );
 
+
+alter table Animales
+add column id_propietario INT,
+add column id_veterinario INT;
+
+alter table Animales 
+add constraint fk_propietarioAnimal
+foreign key (id_propietario) references PropietariosAnimales(id_propietario);
+
+alter table Animales 
+add constraint fk_veterinario
+foreign key (id_veterinario) references Veterinarios(id_veterinario);
 
 
 
